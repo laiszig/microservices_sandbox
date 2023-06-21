@@ -3,11 +3,12 @@ package org.laiszig;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.DeliverCallback;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-public class Publisher {
+public class Consumer2 {
 
     public static void main(String[] args) throws IOException, TimeoutException {
 
@@ -15,14 +16,12 @@ public class Publisher {
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
 
-//        String message = "First message from RabbitMQ";
-        String[] messages = {"First", "Second", "Third", "Fourth"};
-        for(String message : messages) {
-            channel.basicPublish("", "Queue-1", null, message.getBytes());
-        }
+        DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+            String message = new String(delivery.getBody());
+            System.out.println("Message received " + message);
+        };
 
-        channel.close();
-        connection.close();
+        channel.basicConsume("Queue-1", true, deliverCallback, consumerTag -> {});
 
     }
 }
