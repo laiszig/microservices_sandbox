@@ -1,29 +1,27 @@
-package org.laiszig;
+package org.laiszig.getStarted;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import org.json.JSONObject;
+import com.rabbitmq.client.DeliverCallback;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-public class RealTimeExample {
+public class Consumer {
 
     public static void main(String[] args) throws IOException, TimeoutException {
+
         ConnectionFactory factory = new ConnectionFactory();
         Connection connection = factory.newConnection();
         Channel channel = connection.createChannel();
 
-        JSONObject json = new JSONObject();
-        json.put("from_date", "01-Jan-2019");
-        json.put("to_date", "02-Dec-2019");
-        json.put("email", "lais@test.com");
-        json.put("query", "select * from data");
+        DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+            String message = new String(delivery.getBody());
+            System.out.println("Message received " + message);
+        };
 
-        channel.basicPublish("", "Queue-1", null, json.toString().getBytes());
+        channel.basicConsume("Queue-1", true, deliverCallback, consumerTag -> {});
 
-        channel.close();
-        connection.close();
     }
 }
