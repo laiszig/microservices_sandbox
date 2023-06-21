@@ -22,7 +22,6 @@ public class RealTimeExample {
         json.put("query", "select * from data");
 
         channel.basicPublish("", "Queue-1", null, json.toString().getBytes());
-
         channel.close();
         connection.close();
     }
