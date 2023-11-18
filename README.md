@@ -9,6 +9,7 @@
 The intent of this repository is to study all kinds of Microservices topics using as many concepts and tools as possible.
 
 Java Documentation - https://docs.oracle.com/en/java/
+Spring Documentation - https://docs.spring.io/spring-framework/reference/
 
 ## Topics covered so far
 * RabbitMQ
